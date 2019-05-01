@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors       = ['Yoshiyuki Hirano']
   s.email         = ['yhirano@me.com']
   s.homepage      = 'https://github.com/yhirano55/trace_location'
-  s.summary       = 'logs a tracing result of :call and :return'
-  s.description   = %(TraceLocation gem provides logs a tracing result of `:call` and `:return`. It's useful for reading the huge codes (e.g. Ruby on Rails) and tracing its process.)
+  s.summary       = 'helps you get tracing the source location of codes'
+  s.description   = %(TraceLocation helps you get tracing the source location of codes, and helps you can get reading the huge open souce libraries in Ruby)
   s.license       = 'MIT'
   s.files         = Dir.chdir(File.expand_path('.', __dir__)) do
     `git ls-files -z`.split("\x0").reject do |f|

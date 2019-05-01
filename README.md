@@ -1,6 +1,6 @@
 # TraceLocation
 
-TraceLocation gem provides logs a tracing result of `:call` and `:return`. It's useful for reading the huge codes (e.g. Ruby on Rails) and tracing its process.
+TraceLocation helps you get tracing the source location of codes, and helps you can get reading the huge open souce libraries in Ruby.
 
 ## Installation
 
@@ -21,12 +21,11 @@ Or install it yourself as:
 ## Usage
 
 You just surround the code which you want to track the process.
-For example, when you want to track the process of Rails application request/response:
+For example, when you want to track **the lifecycle of Rails application request/response**:
 
 ```
 % bin/rails c
-Running via Spring preloader in process 40741
-Loading development environment (Rails 5.2.3)
+
 irb(main):001:0> env = Rack::MockRequest.env_for('http://localhost:3000/api/stories')
 irb(main):002:0> TraceLocation.trace { status, headers, body = Rails.application.call(env) }
 Created at /path/to/sampleapp/log/trace_location-2019050105051556706139.log
