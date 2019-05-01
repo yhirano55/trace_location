@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trace_location (0.1.0)
+    trace_location (0.1.1)
 
 GEM
   remote: https://rubygems.org/
