@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'trace_location/version'
+require_relative 'trace_location/collector'
 require_relative 'trace_location/config'
-require_relative 'trace_location/tracer'
+require_relative 'trace_location/report'
+require_relative 'trace_location/version'
 
 begin
   require 'rails'
@@ -13,7 +14,12 @@ end
 
 module TraceLocation # :nodoc:
   def self.trace(options = {}, &block)
-    Tracer.new(options).call(&block)
+    result = Collector.collect(&block)
+    Report.build(result.events, result.return_value, options).generate
+    true
+  rescue StandardError => e
+    $stdout.puts "Failure: #{e.message}"
+    false
   end
 
   def self.configure
