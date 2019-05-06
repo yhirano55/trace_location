@@ -50,7 +50,7 @@ module TraceLocation
         events.select(&:valid?).map do |e|
           indent = indent(e.hierarchy)
           event = EVENTS[e.event]
-          path = e.path.to_s.gsub(/#{gems_dir}\//, '')
+          path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
 
           %(#{indent}#{event} #{path}:#{e.lineno} [#{e.method_str}])
         end

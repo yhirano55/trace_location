@@ -2,7 +2,7 @@
 
 module TraceLocation
   class Event # :nodoc:
-    CLASS_FORMAT = /\A#<Class\:(.+)?>\z/.freeze
+    CLASS_FORMAT = /\A#<(?:Class|refinement)\:([A-Za-z0-9\:]+).*>\z/.freeze
     attr_reader :event, :path, :lineno, :method_id, :defined_class, :hierarchy
 
     def initialize(event:, path:, lineno:, method_id:, defined_class:, hierarchy:)
