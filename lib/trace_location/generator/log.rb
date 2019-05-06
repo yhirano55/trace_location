@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+
 module TraceLocation
   module Generator
     class Log < Base # :nodoc:
@@ -8,17 +10,30 @@ module TraceLocation
       INDENT_STRING = ' '
 
       def initialize(events, return_value, options)
-        @events       = events
+        @events = events
         @return_value = return_value
-        @root_dir     = options.fetch(:root_dir) { TraceLocation.config.root_dir }
-        @dest_dir     = options.fetch(:dest_dir) { TraceLocation.config.dest_dir }
-        @current      = Time.now
+        @gems_dir = ::TraceLocation.config.gems_dir
+        @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
+        @current = Time.now
+        @filename = "trace_location-#{@current.strftime('%Y%m%d%H%m%s')}.log"
+        @file_path = File.join(@dest_dir, @filename)
       end
 
       def generate
-        filename = "trace_location-#{current.strftime('%Y%m%d%H%m%s')}.log"
-        file_path = File.join(dest_dir, filename)
+        setup_dir
+        create_file
+        $stdout.puts "Created at #{file_path}"
+      end
 
+      private
+
+      attr_reader :events, :return_value, :gems_dir, :dest_dir, :current, :filename, :file_path
+
+      def setup_dir
+        FileUtils.mkdir_p(dest_dir)
+      end
+
+      def create_file
         File.open(file_path, 'w+') do |io|
           io.puts "Logged by TraceLocation gem at #{current}"
           io.puts 'https://github.com/yhirano55/trace_location'
@@ -29,19 +44,13 @@ module TraceLocation
           io.puts
           io.puts "Result: #{return_value}"
         end
-
-        $stdout.puts "Created at #{file_path}"
       end
-
-      private
-
-      attr_reader :events, :return_value, :root_dir, :dest_dir, :current
 
       def format_events(events)
         events.select(&:valid?).map do |e|
           indent = indent(e.hierarchy)
           event = EVENTS[e.event]
-          path = e.path.to_s.gsub(/#{root_dir}/, '')
+          path = e.path.to_s.gsub(/#{gems_dir}/, '')
 
           %(#{indent}#{event} #{path}:#{e.lineno} [#{e.method_str}])
         end
