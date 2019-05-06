@@ -6,9 +6,9 @@ module TraceLocation
     attr_reader :event, :path, :lineno, :method_id, :defined_class, :hierarchy
 
     def initialize(event:, path:, lineno:, method_id:, defined_class:, hierarchy:)
-      @event     = event
-      @path      = path
-      @lineno    = lineno
+      @event = event
+      @path = path
+      @lineno = lineno
       @method_id = method_id
       @defined_class = defined_class
       @hierarchy = hierarchy.to_i
