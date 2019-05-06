@@ -9,6 +9,8 @@ module TraceLocation
       events = []
       hierarchy = 0
       tracer = TracePoint.new(:call, :return) do |trace_point|
+        next unless trace_point.path.include?(::TraceLocation.config.gems_dir)
+
         case trace_point.event
         when :call
           events << Event.new(
