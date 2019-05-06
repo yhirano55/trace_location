@@ -2,10 +2,10 @@
 
 module TraceLocation
   class Config # :nodoc:
-    attr_accessor :root_dir, :dest_dir, :default_format
+    attr_accessor :gems_dir, :dest_dir, :default_format
 
     def initialize
-      @root_dir = Dir.pwd
+      @gems_dir = File.join(Gem.path[0], 'gems')
       @dest_dir = Dir.pwd
       @default_format = :log
     end
