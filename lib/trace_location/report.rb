@@ -7,6 +7,7 @@ module TraceLocation
     class InvalidFormatError < ArgumentError; end
 
     GENERATORS = {
+      csv: ::TraceLocation::Generator::Csv,
       log: ::TraceLocation::Generator::Log
     }.freeze
 
