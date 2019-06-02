@@ -34,7 +34,7 @@ module TraceLocation
       end
 
       def create_file
-        File.open(file_path, 'w+') do |io|
+        File.open(file_path, 'wb+') do |io|
           io.puts "Logged by TraceLocation gem at #{current}"
           io.puts 'https://github.com/yhirano55/trace_location'
           io.puts
