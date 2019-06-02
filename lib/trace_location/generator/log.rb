@@ -10,8 +10,7 @@ module TraceLocation
       INDENT_STRING = ' '
 
       def initialize(events, return_value, options)
-        @events = events
-        @return_value = return_value
+        super
         @gems_dir = ::TraceLocation.config.gems_dir
         @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
         @current = Time.now
@@ -34,7 +33,7 @@ module TraceLocation
       end
 
       def create_file
-        File.open(file_path, 'w+') do |io|
+        File.open(file_path, 'wb+') do |io|
           io.puts "Logged by TraceLocation gem at #{current}"
           io.puts 'https://github.com/yhirano55/trace_location'
           io.puts

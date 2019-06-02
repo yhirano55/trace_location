@@ -6,8 +6,7 @@ module TraceLocation
   module Generator
     class Csv < Base # :nodoc:
       def initialize(events, return_value, options)
-        @events = events
-        @return_value = return_value
+        super
         @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
         @file_path = File.join(@dest_dir, "trace_location-#{Time.now.strftime('%Y%m%d%H%m%s')}.csv")
       end
