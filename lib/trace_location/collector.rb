@@ -5,11 +5,11 @@ module TraceLocation
     require_relative 'event'
     Result = Struct.new(:events, :return_value)
 
-    def self.collect(&block)
+    def self.collect(pattern, &block)
       events = []
       hierarchy = 0
       tracer = TracePoint.new(:call, :return) do |trace_point|
-        next unless trace_point.path.include?(::TraceLocation.config.gems_dir)
+        next if pattern && !trace_point.path.to_s.match?(/#{pattern}/)
 
         case trace_point.event
         when :call
