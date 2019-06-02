@@ -8,7 +8,8 @@ module TraceLocation
 
     GENERATORS = {
       csv: ::TraceLocation::Generator::Csv,
-      log: ::TraceLocation::Generator::Log
+      log: ::TraceLocation::Generator::Log,
+      markdown: ::TraceLocation::Generator::Markdown
     }.freeze
 
     def self.build(events, return_value, options)
