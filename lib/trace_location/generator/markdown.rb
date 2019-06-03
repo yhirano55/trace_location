@@ -44,6 +44,7 @@ module TraceLocation
             next if pm.nil?
 
             path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
+            caller_path = e.caller_path.to_s.gsub(%r{#{gems_dir}/}, '')
             io.write <<~MARKDOWN
               <details open>
               <summary>#{path}:#{e.lineno}</summary>
@@ -51,7 +52,9 @@ module TraceLocation
               ##### #{pm.name_with_owner}
               ```#{pm.source_type}
               #{pm.source.chomp}
+              # called from #{caller_path}:#{e.caller_lineno}
               ```
+
               </details>
             MARKDOWN
           end

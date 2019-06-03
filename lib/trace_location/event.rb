@@ -3,12 +3,14 @@
 module TraceLocation
   class Event # :nodoc:
     CLASS_FORMAT = /\A#<(?:Class|refinement)\:([A-Za-z0-9\:]+).*>\z/.freeze
-    attr_reader :event, :path, :lineno, :method_id, :defined_class, :hierarchy
+    attr_reader :event, :path, :lineno, :caller_path, :caller_lineno, :method_id, :defined_class, :hierarchy
 
-    def initialize(event:, path:, lineno:, method_id:, defined_class:, hierarchy:)
+    def initialize(event:, path:, lineno:, caller_path:, caller_lineno:, method_id:, defined_class:, hierarchy:)
       @event = event
       @path = path
       @lineno = lineno
+      @caller_path = caller_path
+      @caller_lineno = caller_lineno
       @method_id = method_id
       @defined_class = defined_class
       @hierarchy = hierarchy.to_i

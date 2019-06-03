@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'binding_of_caller'
+
 module TraceLocation
   module Collector # :nodoc:
     require_relative 'event'
@@ -14,6 +16,7 @@ module TraceLocation
         next if pattern && !trace_point.path.to_s.match?(/#{pattern}/)
 
         location_cache_key = trace_point.binding.source_location.join(':')
+        caller_path, caller_lineno = trace_point.binding.of_caller(2).source_location
 
         case trace_point.event
         when :call
@@ -23,6 +26,8 @@ module TraceLocation
             event: trace_point.event,
             path: trace_point.path,
             lineno: trace_point.lineno,
+            caller_path: caller_path,
+            caller_lineno: caller_lineno,
             method_id: trace_point.method_id,
             defined_class: trace_point.defined_class,
             hierarchy: hierarchy
@@ -36,6 +41,8 @@ module TraceLocation
             event: trace_point.event,
             path: trace_point.path,
             lineno: trace_point.lineno,
+            caller_path: caller_path,
+            caller_lineno: caller_lineno,
             method_id: trace_point.method_id,
             defined_class: trace_point.defined_class,
             hierarchy: hierarchy
