@@ -14,8 +14,10 @@ end
 
 module TraceLocation # :nodoc:
   def self.trace(options = {}, &block)
-    pattern = options.delete(:pattern)
-    result = Collector.collect(pattern, &block)
+    match = options.delete(:match)
+    ignore = options.delete(:ignore)
+
+    result = Collector.collect(match: match, ignore: ignore, &block)
     Report.build(result.events, result.return_value, options).generate
     true
   rescue StandardError => e

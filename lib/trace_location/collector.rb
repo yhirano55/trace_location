@@ -7,14 +7,15 @@ module TraceLocation
     require_relative 'event'
     Result = Struct.new(:events, :return_value)
 
-    def self.collect(pattern, &block)
+    def self.collect(match:, ignore:, &block)
       events = []
       hierarchy = 0
       id = 0
       cache = {}
 
       tracer = TracePoint.new(:call, :return) do |trace_point|
-        next if pattern && !trace_point.path.to_s.match?(/#{pattern}/)
+        next if match && !trace_point.path.to_s.match?(/#{match}/)
+        next if ignore && trace_point.path.to_s.match?(/#{ignore}/)
 
         id += 1
         location_cache_key = trace_point.binding.source_location.join(':')
