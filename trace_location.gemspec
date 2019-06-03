@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.required_ruby_version = '>= 2.5.0'
 
+  s.add_dependency 'binding_of_caller'
   s.add_dependency 'pry'
 
   s.add_development_dependency 'bundler', '~> 2.0'
