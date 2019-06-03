@@ -18,8 +18,8 @@ module TraceLocation
         next if ignore && trace_point.path.to_s.match?(/#{ignore}/)
 
         id += 1
-        location_cache_key = trace_point.binding.source_location.join(':')
         caller_path, caller_lineno = trace_point.binding.of_caller(2).source_location
+        location_cache_key = "#{caller_path}:#{caller_lineno}"
 
         case trace_point.event
         when :call
@@ -39,7 +39,7 @@ module TraceLocation
 
           hierarchy += 1
         when :return
-          hierarchy = cache[location_cache_key] || hierarchy - 1
+          hierarchy = cache[location_cache_key] || hierarchy
 
           events << Event.new(
             id: id,
