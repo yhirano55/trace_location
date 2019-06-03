@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'trace_location/cli'
 require_relative 'trace_location/collector'
 require_relative 'trace_location/config'
 require_relative 'trace_location/report'
