@@ -44,19 +44,15 @@ module TraceLocation
             next if pm.nil?
 
             path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
-            comment = pm.doc.split("\n").map { |line| "# #{line}" }.join("\n")
             io.write <<~MARKDOWN
-              <details>
+              <details open>
               <summary>#{path}:#{e.lineno}</summary>
-              <div>
 
-              #### #{pm.name_with_owner}
+              ##### #{pm.name_with_owner}
               ```#{pm.source_type}
-              #{comment.presence ? "#{comment}\n#{pm.source.chomp}" : pm.source.chomp}
+              #{pm.source.chomp}
               ```
-              </div>
               </details>
-
             MARKDOWN
           end
         end
