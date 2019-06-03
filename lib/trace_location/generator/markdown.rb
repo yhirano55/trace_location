@@ -36,7 +36,11 @@ module TraceLocation
           MARKDOWN
 
           events.select(&:call?).each do |e|
-            pm = Pry::Method.from_str(e.method_str)
+            pm = begin
+                   Pry::Method.from_str(e.method_str)
+                 rescue StandardError
+                   nil
+                 end
             next if pm.nil?
 
             path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
