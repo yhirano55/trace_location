@@ -7,7 +7,7 @@ module TraceLocation
     def initialize
       @gems_dir = File.join(Gem.path[0], 'gems')
       @dest_dir = Dir.pwd
-      @default_format = :log
+      @default_format = :markdown
     end
   end
 end
