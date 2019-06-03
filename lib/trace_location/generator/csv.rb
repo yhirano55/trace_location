@@ -5,6 +5,8 @@ require 'csv'
 module TraceLocation
   module Generator
     class Csv < Base # :nodoc:
+      ATTRIBUTES = %w[id event path lineno caller_path caller_lineno method_str hierarchy].freeze
+
       def initialize(events, return_value, options)
         super
         @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
@@ -27,9 +29,10 @@ module TraceLocation
 
       def create_file
         CSV.open(file_path, 'wb+') do |csv|
-          csv << %w[event method path lineno]
-          events.each do |e|
-            csv << [e.event, e.method_str, e.path, e.lineno]
+          csv << ATTRIBUTES
+
+          events.each do |event|
+            csv << ATTRIBUTES.map { |attr| event.public_send(attr) }
           end
         end
       end
