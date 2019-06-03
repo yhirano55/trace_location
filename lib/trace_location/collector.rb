@@ -13,9 +13,11 @@ module TraceLocation
       tracer = TracePoint.new(:call, :return) do |trace_point|
         next if pattern && !trace_point.path.to_s.match?(/#{pattern}/)
 
+        location_cache_key = trace_point.binding.source_location.join(':')
+
         case trace_point.event
         when :call
-          cache[trace_point.binding.source_location.join(':')] = hierarchy
+          cache[location_cache_key] = hierarchy
 
           events << Event.new(
             event: trace_point.event,
@@ -28,7 +30,7 @@ module TraceLocation
 
           hierarchy += 1
         when :return
-          hierarchy = cache[trace_point.binding.source_location.join(':')] || hierarchy - 1
+          hierarchy = cache[location_cache_key] || hierarchy - 1
 
           events << Event.new(
             event: trace_point.event,
