@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trace_location (0.9.0)
+    trace_location (0.9.1)
       binding_of_caller
       pry
 
