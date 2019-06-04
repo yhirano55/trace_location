@@ -36,11 +36,7 @@ module TraceLocation
           MARKDOWN
 
           events.select(&:call?).each do |e|
-            pm = begin
-                   Pry::Method.from_str(e.method_str)
-                 rescue StandardError
-                   nil
-                 end
+            pm = Pry::Method.from_str(e.method_str)
             next if pm.nil?
 
             path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
@@ -50,13 +46,15 @@ module TraceLocation
               <summary>#{path}:#{e.lineno}</summary>
 
               ##### #{pm.name_with_owner}
+
               ```#{pm.source_type}
               #{pm.source.chomp}
               # called from #{caller_path}:#{e.caller_lineno}
               ```
-
               </details>
             MARKDOWN
+          rescue StandardError
+            next
           end
         end
       end
