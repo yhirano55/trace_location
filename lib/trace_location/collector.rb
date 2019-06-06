@@ -70,9 +70,13 @@ module TraceLocation
 
       def extract_method_from(trace_point)
         if trace_point.self.is_a?(Module)
-          ::Module.instance_method(:method).bind(trace_point.self).call(trace_point.method_id)
+          ::Module.instance_method(:method)
+                  .bind(trace_point.self)
+                  .call(trace_point.method_id)
         else
-          ::Kernel.instance_method(:method).bind(trace_point.self).call(trace_point.method_id)
+          ::Kernel.instance_method(:method)
+                  .bind(trace_point.self)
+                  .call(trace_point.method_id)
         end
       end
 

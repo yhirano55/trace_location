@@ -5,7 +5,7 @@ module TraceLocation
     class Markdown < Base # :nodoc:
       def initialize(events, return_value, options)
         super
-        @gems_dir = ::TraceLocation.config.gems_dir
+        @current_dir = ::TraceLocation.config.current_dir
         @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
         @current = Time.now
         @filename = "trace_location-#{@current.strftime('%Y%m%d%H%m%s')}.md"
@@ -20,7 +20,7 @@ module TraceLocation
 
       private
 
-      attr_reader :events, :return_value, :gems_dir, :dest_dir, :current, :filename, :file_path
+      attr_reader :events, :return_value, :current_dir, :dest_dir, :current, :filename, :file_path
 
       def setup_dir
         FileUtils.mkdir_p(dest_dir)
@@ -34,8 +34,9 @@ module TraceLocation
           MARKDOWN
 
           events.select(&:call?).each do |e|
-            path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
-            caller_path = e.caller_path.to_s.gsub(%r{#{gems_dir}/}, '')
+            path = e.path.to_s.gsub(%r{#{current_dir}/}, '')
+            caller_path = e.caller_path.to_s.gsub(%r{#{current_dir}/}, '')
+
             io.write <<~MARKDOWN
               <details open>
               <summary>#{path}:#{e.lineno}</summary>

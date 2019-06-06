@@ -11,7 +11,7 @@ module TraceLocation
 
       def initialize(events, return_value, options)
         super
-        @gems_dir = ::TraceLocation.config.gems_dir
+        @current_dir = ::TraceLocation.config.current_dir
         @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
         @current = Time.now
         @filename = "trace_location-#{@current.strftime('%Y%m%d%H%m%s')}.log"
@@ -26,7 +26,7 @@ module TraceLocation
 
       private
 
-      attr_reader :events, :return_value, :gems_dir, :dest_dir, :current, :filename, :file_path
+      attr_reader :events, :return_value, :current_dir, :dest_dir, :current, :filename, :file_path
 
       def setup_dir
         FileUtils.mkdir_p(dest_dir)
@@ -46,12 +46,11 @@ module TraceLocation
       end
 
       def format_events(events)
-        events.select(&:valid?).map do |e|
-          indent = indent(e.hierarchy)
-          event = EVENTS[e.event]
-          path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
+        events.select(&:valid?).map do |event|
+          indent = indent(event.hierarchy)
+          path = event.path.to_s.gsub(%r{#{current_dir}/}, '')
 
-          %(#{indent}#{event} #{path}:#{e.lineno} [#{e.owner_with_name}])
+          %(#{indent}#{EVENTS[event.event]} #{path}:#{event.lineno} [#{event.owner_with_name}])
         end
       end
 

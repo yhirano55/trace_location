@@ -9,6 +9,7 @@ module TraceLocation
 
       def initialize(events, return_value, options)
         super
+        @current_dir = ::TraceLocation.config.current_dir
         @dest_dir = options.fetch(:dest_dir) { ::TraceLocation.config.dest_dir }
         @file_path = File.join(@dest_dir, "trace_location-#{Time.now.strftime('%Y%m%d%H%m%s')}.csv")
       end
@@ -21,7 +22,7 @@ module TraceLocation
 
       private
 
-      attr_reader :events, :return_value, :dest_dir, :file_path
+      attr_reader :events, :return_value, :current_dir, :dest_dir, :file_path
 
       def setup_dir
         FileUtils.mkdir_p(dest_dir)
@@ -32,7 +33,16 @@ module TraceLocation
           csv << ATTRIBUTES
 
           events.each do |event|
-            csv << ATTRIBUTES.map { |attr| event.public_send(attr) }
+            csv << [
+              event.id,
+              event.event,
+              event.path.to_s.gsub(%r{#{current_dir}/}, ''),
+              event.lineno,
+              event.caller_path.to_s.gsub(%r{#{current_dir}/}, ''),
+              event.caller_lineno,
+              event.owner_with_name,
+              event.hierarchy
+            ]
           end
         end
       end
