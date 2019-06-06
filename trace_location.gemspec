@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.5.0'
 
   s.add_dependency 'binding_of_caller'
+  s.add_dependency 'method_source'
 
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rake'

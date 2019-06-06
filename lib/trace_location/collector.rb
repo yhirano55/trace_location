@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'binding_of_caller'
+require 'method_source'
 
 module TraceLocation
   module Collector # :nodoc:
