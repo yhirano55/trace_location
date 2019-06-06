@@ -51,7 +51,7 @@ module TraceLocation
           event = EVENTS[e.event]
           path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
 
-          %(#{indent}#{event} #{path}:#{e.lineno} [#{e.method_str}])
+          %(#{indent}#{event} #{path}:#{e.lineno} [#{e.owner_with_name}])
         end
       end
 

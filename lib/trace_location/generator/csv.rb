@@ -5,7 +5,7 @@ require 'csv'
 module TraceLocation
   module Generator
     class Csv < Base # :nodoc:
-      ATTRIBUTES = %w[id event path lineno caller_path caller_lineno method_str hierarchy].freeze
+      ATTRIBUTES = %w[id event path lineno caller_path caller_lineno owner_with_name hierarchy].freeze
 
       def initialize(events, return_value, options)
         super

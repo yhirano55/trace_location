@@ -3,18 +3,20 @@
 module TraceLocation
   class Event # :nodoc:
     CLASS_FORMAT = /\A#<(?:Class|refinement)\:([A-Za-z0-9\:]+).*>\z/.freeze
-    attr_reader :id, :event, :path, :lineno, :caller_path, :caller_lineno, :method_id, :defined_class, :hierarchy
+    attr_reader :id, :event, :path, :lineno, :caller_path, :caller_lineno, :owner, :name, :source, :hierarchy, :is_module
 
-    def initialize(id:, event:, path:, lineno:, caller_path:, caller_lineno:, method_id:, defined_class:, hierarchy:)
+    def initialize(id:, event:, path:, lineno:, caller_path:, caller_lineno:, owner:, name:, source:, hierarchy:, is_module:)
       @id = id
       @event = event
       @path = path
       @lineno = lineno
       @caller_path = caller_path
       @caller_lineno = caller_lineno
-      @method_id = method_id
-      @defined_class = defined_class
+      @owner = owner
+      @name = name
+      @source = source
       @hierarchy = hierarchy.to_i
+      @is_module = is_module
     end
 
     def valid?
@@ -33,14 +35,10 @@ module TraceLocation
       event == :return
     end
 
-    def method_str
-      match = defined_class.to_s.match(CLASS_FORMAT)
-
-      if match
-        "#{match[1]}.#{method_id}"
-      else
-        "#{defined_class}##{method_id}"
-      end
+    def owner_with_name
+      match = owner.to_s.match(CLASS_FORMAT)
+      separator = is_module ? '.' : '#'
+      match ? "#{match[1]}#{separator}#{name}" : "#{owner}#{separator}#{name}"
     end
   end
 end

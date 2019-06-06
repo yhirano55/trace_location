@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry'
-
 module TraceLocation
   module Generator
     class Markdown < Base # :nodoc:
@@ -36,25 +34,20 @@ module TraceLocation
           MARKDOWN
 
           events.select(&:call?).each do |e|
-            pm = Pry::Method.from_str(e.method_str)
-            next if pm.nil?
-
             path = e.path.to_s.gsub(%r{#{gems_dir}/}, '')
             caller_path = e.caller_path.to_s.gsub(%r{#{gems_dir}/}, '')
             io.write <<~MARKDOWN
               <details open>
               <summary>#{path}:#{e.lineno}</summary>
 
-              ##### #{pm.name_with_owner}
+              ##### #{e.owner_with_name}
 
-              ```#{pm.source_type}
-              #{pm.source.chomp}
+              ```ruby
+              #{e.source}
               # called from #{caller_path}:#{e.caller_lineno}
               ```
               </details>
             MARKDOWN
-          rescue StandardError
-            next
           end
         end
       end
