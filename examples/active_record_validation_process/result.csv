@@ -1,0 +1,11 @@
+id,event,path,lineno,caller_path,caller_lineno,owner_with_name,hierarchy
+1,call,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,65,(irb),4,ActiveRecord::Validations#valid?,0
+2,call,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,75,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,66,ActiveRecord::Validations#default_validation_context,1
+3,call,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/persistence.rb,231,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,76,ActiveRecord::Persistence#new_record?,2
+4,call,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb,490,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/persistence.rb,232,ActiveRecord::Transactions#sync_with_transaction_state,3
+5,call,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb,494,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb,491,ActiveRecord::Transactions#update_attributes_from_transaction_state,4
+6,return,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb,500,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb,491,ActiveRecord::Transactions#update_attributes_from_transaction_state,4
+7,return,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb,492,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/persistence.rb,232,ActiveRecord::Transactions#sync_with_transaction_state,3
+8,return,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/persistence.rb,234,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,76,ActiveRecord::Persistence#new_record?,2
+9,return,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,77,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,66,ActiveRecord::Validations#default_validation_context,1
+10,return,vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb,69,(irb),4,ActiveRecord::Validations#valid?,0
