@@ -1,0 +1,17 @@
+Logged by TraceLocation gem at 2019-06-08 01:19:25 +0900
+https://github.com/yhirano55/trace_location
+
+[Tracing events] C: Call, R: Return
+
+C vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb:65 [ActiveRecord::Validations#valid?]
+  C vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb:75 [ActiveRecord::Validations#default_validation_context]
+    C vendor/bundle/gems/activerecord-5.2.3/lib/active_record/persistence.rb:231 [ActiveRecord::Persistence#new_record?]
+      C vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb:490 [ActiveRecord::Transactions#sync_with_transaction_state]
+        C vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb:494 [ActiveRecord::Transactions#update_attributes_from_transaction_state]
+        R vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb:500 [ActiveRecord::Transactions#update_attributes_from_transaction_state]
+      R vendor/bundle/gems/activerecord-5.2.3/lib/active_record/transactions.rb:492 [ActiveRecord::Transactions#sync_with_transaction_state]
+    R vendor/bundle/gems/activerecord-5.2.3/lib/active_record/persistence.rb:234 [ActiveRecord::Persistence#new_record?]
+  R vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb:77 [ActiveRecord::Validations#default_validation_context]
+R vendor/bundle/gems/activerecord-5.2.3/lib/active_record/validations.rb:69 [ActiveRecord::Validations#valid?]
+
+Result: true
