@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'fileutils'
-require_relative 'support/dummy/dummy'
+require_relative 'support/dummy/independence'
+require_relative 'support/dummy/dependence_on_other_class'
 
 RSpec.describe TraceLocation do
   it 'has a version number' do
@@ -13,65 +13,213 @@ RSpec.describe TraceLocation do
       TraceLocation.config.dest_dir = 'spec/support/logs'
     end
 
-    context 'when a method is ca' do
-      dummy_instance = DummyA.new
-
+    context 'when the method is called not depending on other class' do
       let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
       let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+      let(:method) { Independence.method(:independent_method) }
 
       before do
-        TraceLocation.trace { dummy_instance.dummy }
+        TraceLocation.trace { method.call }
       end
 
       it 'including correct path' do
-        path, lineno = dummy_instance.method(:dummy).source_location
+        path, lineno = method.source_location
         path = path.delete_prefix "#{Dir.pwd}/"
 
         expect(content).to include "#{path}:#{lineno}"
       end
 
       it 'including method name' do
-        name = dummy_instance.method(:dummy).name
+        method_name = method.name
 
-        expect(content).to include "def #{name}"
+        expect(content).to include "def self.#{method_name}"
       end
     end
 
-    context 'when the method is called depending on other' do
-      dummy_instance_a = DummyA.new
-      dummy_instance_b = DummyB.new
-
+    context 'when the method is called depending on other class' do
       let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
       let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+      let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+      let(:depended_method) { Independence.method(:independent_method) }
 
       before do
-        TraceLocation.trace { dummy_instance_b.dummy }
+        TraceLocation.trace { method.call }
       end
 
-      it 'including path of DummyA.dummy' do
-        path, lineno = dummy_instance_b.method(:dummy).source_location
+      it 'including path of target method' do
+        path, lineno = method.source_location
         path = path.delete_prefix "#{Dir.pwd}/"
 
         expect(content).to include "#{path}:#{lineno}"
       end
 
-      it 'including path of DummyB.dummy' do
-        path, lineno = dummy_instance_b.method(:dummy).source_location
+      it 'including method name of target method' do
+        method_name = method.name
+
+        expect(content).to include "def self.#{method_name}"
+      end
+
+      it 'including path of depended method' do
+        path, lineno = depended_method.source_location
         path = path.delete_prefix "#{Dir.pwd}/"
 
         expect(content).to include "#{path}:#{lineno}"
       end
 
-      it 'including method name of DummyA.dummy' do
-        name = dummy_instance_a.method(:dummy).name
+      it 'including method name of dependent method' do
+        method_name = depended_method.name
 
-        expect(content).to include "def #{name}"
+        expect(content).to include "def self.#{method_name}"
+      end
+    end
+
+    context 'with "match"' do
+      let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
+      let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+      let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+      let(:depended_method) { Independence.method(:independent_method) }
+
+      before do
+        TraceLocation.trace(match: /dependence_on_other_class/) { method.call }
       end
 
-      it 'including method name of DummyB.dummy' do
-        name = dummy_instance_b.method(:dummy).name
+      it 'including path of target method' do
+        path, lineno = method.source_location
+        path = path.delete_prefix "#{Dir.pwd}/"
 
-        expect(content).to include "def #{name}"
+        expect(content).to include "#{path}:#{lineno}"
+      end
+
+      it 'including method name of target method' do
+        method_name = method.name
+
+        expect(content).to include "def self.#{method_name}"
+      end
+
+      it 'excluding path of depended method' do
+        path, lineno = depended_method.source_location
+        path = path.delete_prefix "#{Dir.pwd}/"
+
+        expect(content).not_to include "#{path}:#{lineno}"
+      end
+
+      it 'excluding method name of depended method' do
+        method_name = depended_method.name
+
+        expect(content).not_to include "def self.#{method_name}"
+      end
+    end
+
+    context 'with "ignore"' do
+      let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
+      let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+      let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+      let(:depended_method) { Independence.method(:independent_method) }
+
+      before do
+        TraceLocation.trace(ignore: /dependence_on_other_class/) { method.call }
+      end
+
+      it 'excluding path of target method' do
+        path, lineno = method.source_location
+        path = path.delete_prefix "#{Dir.pwd}/"
+
+        expect(content).not_to include "#{path}:#{lineno}"
+      end
+
+      it 'excluding method name of target method' do
+        method_name = method.name
+
+        expect(content).not_to include "def self.#{method_name}"
+      end
+
+      it 'including path of depended method' do
+        path, lineno = depended_method.source_location
+        path = path.delete_prefix "#{Dir.pwd}/"
+
+        expect(content).to include "#{path}:#{lineno}"
+      end
+
+      it 'including method name of depended method' do
+        method_name = depended_method.name
+
+        expect(content).to include "def self.#{method_name}"
+      end
+    end
+
+    context 'with "format"' do
+      context 'with "markdown"' do
+        let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
+        let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+        let(:method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(format: :markdown) { method.call }
+        end
+
+        it 'including correct path' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method name' do
+          method_name = method.name
+
+          expect(content).to include "def self.#{method_name}"
+        end
+      end
+
+      context 'with "log"' do
+        let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.log/) }.last }
+        let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+        let(:method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(format: :log) { method.call }
+        end
+
+        it 'including path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method calling' do
+          method_calling = method.to_s.gsub(/#<Method: |>/, '')
+
+          expect(content).to include "[#{method_calling}]"
+        end
+      end
+
+      context 'with "csv"' do
+        let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.csv/) }.last }
+        let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+        let(:csv_header) { "id,event,path,lineno,caller_path,caller_lineno,owner_with_name,hierarchy\n" }
+        let(:method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(format: :csv) { method.call }
+        end
+
+        it 'including header' do
+          expect(content).to include csv_header
+        end
+
+        it 'including path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path},#{lineno}"
+        end
+
+        it 'including method calling' do
+          method_calling = method.to_s.gsub(/#<Method: |>/, '')
+
+          expect(content).to include method_calling.to_s
+        end
       end
     end
 
