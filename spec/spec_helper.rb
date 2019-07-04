@@ -2,6 +2,7 @@
 
 require 'bundler/setup'
 require 'trace_location'
+require 'fileutils'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
