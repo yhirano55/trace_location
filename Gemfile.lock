@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trace_location (0.9.3.1)
+    trace_location (0.9.4)
       binding_of_caller
       method_source
 
