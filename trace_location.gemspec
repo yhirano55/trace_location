@@ -7,8 +7,8 @@ require 'trace_location/version'
 Gem::Specification.new do |s|
   s.name          = 'trace_location'
   s.version       = TraceLocation::VERSION
-  s.authors       = ['Yoshiyuki Hirano']
-  s.email         = ['yhirano@me.com']
+  s.authors       = ['Yoshiyuki Hirano', 'Misaki Shioi']
+  s.email         = ['yhirano@me.com', 'shioi.mm@gmail.com']
   s.homepage      = 'https://github.com/yhirano55/trace_location'
   s.summary       = 'helps you get tracing the source location of codes'
   s.description   = %(TraceLocation helps you get tracing the source location of codes, and helps you can get reading the huge open souce libraries in Ruby)
@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.bindir        = 'exe'
   s.executables   = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.require_paths = ['lib']
-  s.required_ruby_version = '>= 2.5.0'
+  s.required_ruby_version = '>= 2.6.0'
 
   s.add_dependency 'binding_of_caller'
   s.add_dependency 'method_source'
