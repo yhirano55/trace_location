@@ -38,8 +38,8 @@ Then you can get logs like this: [.md](https://github.com/yhirano55/trace_locati
 | name | content | example |
 |:-----|:--------|:--------|
 | format | `:markdown`, `:log`, `:csv` (default: `:markdown`) | `:markdown` |
-| match | Regexp for allow list | `/activerecord/` |
-| ignore | Regexp for deny list | `/bootsnap\|activesupport/` |
+| match | Regexp, Symbol, String for allow list | `:activerecord` |
+| ignore | Regexp, Symbol, String for deny list | `/bootsnap\|activesupport/ |
 
 ## More examples
 
