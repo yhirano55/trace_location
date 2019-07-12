@@ -2,6 +2,7 @@
 
 require_relative 'support/dummy/independence'
 require_relative 'support/dummy/dependence_on_other_class'
+require_relative 'support/dummy/dependence_on_multiple_class'
 
 RSpec.describe TraceLocation do
   it 'has a version number' do
@@ -76,74 +77,178 @@ RSpec.describe TraceLocation do
     context 'with "match"' do
       let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
       let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
-      let(:method) { DependenceOnOtherClass.method(:dependent_method) }
-      let(:depended_method) { Independence.method(:independent_method) }
 
-      before do
-        TraceLocation.trace(match: /dependence_on_other_class/) { method.call }
+      context 'when argument is kind of Array' do
+        let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+        let(:method_between_other_methods) { DependenceOnOtherClass.method(:dependent_method) }
+        let(:depended_method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(match: [:dependence_on_other_class, 'dependence_on_multiple_class']) { method.call }
+        end
+
+        it 'including path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method name of target method' do
+          method_name = method.name
+
+          expect(content).to include "def self.#{method_name}"
+        end
+
+        it 'including path of method between other methods' do
+          path, lineno = method_between_other_methods.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method name of method between other methods' do
+          method_name = method_between_other_methods.name
+
+          expect(content).to include "def self.#{method_name}"
+        end
+
+        it 'excluding path of depended method' do
+          path, lineno = depended_method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).not_to include "#{path}:#{lineno}"
+        end
+
+        it 'excluding method name of depended method' do
+          method_name = depended_method.name
+
+          expect(content).not_to include "def self.#{method_name}"
+        end
       end
 
-      it 'including path of target method' do
-        path, lineno = method.source_location
-        path = path.delete_prefix "#{Dir.pwd}/"
+      context 'when argument is not kind of Array' do
+        let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+        let(:depended_method) { Independence.method(:independent_method) }
 
-        expect(content).to include "#{path}:#{lineno}"
-      end
+        before do
+          TraceLocation.trace(match: /dependence_on_other_class/) { method.call }
+        end
 
-      it 'including method name of target method' do
-        method_name = method.name
+        it 'including path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
 
-        expect(content).to include "def self.#{method_name}"
-      end
+          expect(content).to include "#{path}:#{lineno}"
+        end
 
-      it 'excluding path of depended method' do
-        path, lineno = depended_method.source_location
-        path = path.delete_prefix "#{Dir.pwd}/"
+        it 'including method name of target method' do
+          method_name = method.name
 
-        expect(content).not_to include "#{path}:#{lineno}"
-      end
+          expect(content).to include "def self.#{method_name}"
+        end
 
-      it 'excluding method name of depended method' do
-        method_name = depended_method.name
+        it 'excluding path of depended method' do
+          path, lineno = depended_method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
 
-        expect(content).not_to include "def self.#{method_name}"
+          expect(content).not_to include "#{path}:#{lineno}"
+        end
+
+        it 'excluding method name of depended method' do
+          method_name = depended_method.name
+
+          expect(content).not_to include "def self.#{method_name}"
+        end
       end
     end
 
     context 'with "ignore"' do
       let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
       let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
-      let(:method) { DependenceOnOtherClass.method(:dependent_method) }
-      let(:depended_method) { Independence.method(:independent_method) }
 
-      before do
-        TraceLocation.trace(ignore: /dependence_on_other_class/) { method.call }
+      context 'when argument is kind of Array' do
+        let(:method) { DependenceOnMultipleClass.method(:dependent_method) }
+        let(:method_between_other_methods) { DependenceOnOtherClass.method(:dependent_method) }
+        let(:depended_method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(ignore: [:dependence_on_other_class, 'dependence_on_multiple_class']) { method.call }
+        end
+
+        it 'excluding path of called method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).not_to include "#{path}:#{lineno}"
+        end
+
+        it 'excluding method name of target method' do
+          method_name = method.name
+
+          expect(content).not_to include "def self.#{method_name}"
+        end
+
+        it 'excluding path of method between other methods' do
+          path, lineno = method_between_other_methods.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).not_to include "#{path}:#{lineno}"
+        end
+
+        it 'excluding method name of method between other methods' do
+          method_name = method_between_other_methods.name
+
+          expect(content).not_to include "def self.#{method_name}"
+        end
+
+        it 'including path of depended method' do
+          path, lineno = depended_method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method name of depended method' do
+          method_name = depended_method.name
+
+          expect(content).to include "def self.#{method_name}"
+        end
       end
 
-      it 'excluding path of target method' do
-        path, lineno = method.source_location
-        path = path.delete_prefix "#{Dir.pwd}/"
+      context 'when argument is not kind of Array' do
+        let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+        let(:depended_method) { Independence.method(:independent_method) }
 
-        expect(content).not_to include "#{path}:#{lineno}"
-      end
+        before do
+          TraceLocation.trace(ignore: /dependence_on_other_class/) { method.call }
+        end
 
-      it 'excluding method name of target method' do
-        method_name = method.name
+        it 'excluding path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
 
-        expect(content).not_to include "def self.#{method_name}"
-      end
+          expect(content).not_to include "#{path}:#{lineno}"
+        end
 
-      it 'including path of depended method' do
-        path, lineno = depended_method.source_location
-        path = path.delete_prefix "#{Dir.pwd}/"
+        it 'excluding method name of target method' do
+          method_name = method.name
 
-        expect(content).to include "#{path}:#{lineno}"
-      end
+          expect(content).not_to include "def self.#{method_name}"
+        end
 
-      it 'including method name of depended method' do
-        method_name = depended_method.name
+        it 'including path of depended method' do
+          path, lineno = depended_method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
 
-        expect(content).to include "def self.#{method_name}"
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method name of depended method' do
+          method_name = depended_method.name
+
+          expect(content).to include "def self.#{method_name}"
+        end
       end
     end
 

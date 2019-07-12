@@ -16,8 +16,8 @@ module TraceLocation
         cache = {}
 
         tracer = TracePoint.new(:call, :return) do |trace_point|
-          next if match && !trace_point.path.to_s.match?(/#{match}/)
-          next if ignore && trace_point.path.to_s.match?(/#{ignore}/)
+          next if match && !trace_point.path.to_s.match?(/#{Array(match).join('|')}/)
+          next if ignore && trace_point.path.to_s.match?(/#{Array(ignore).join('|')}/)
 
           id += 1
           caller_path, caller_lineno = trace_point.binding.of_caller(2).source_location
