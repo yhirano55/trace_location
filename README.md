@@ -69,7 +69,7 @@ Results: [.md](https://github.com/yhirano55/trace_location/blob/master/examples/
 ```ruby
 class User < ApplicationRecord
   # temporary surrounding with TraceLocation#trace
-  Trace.location(format: :markdown, ignore: /activesupport/) do
+  TraceLocation.trace(format: :markdown, ignore: /activesupport/) do
     has_secure_password
   end
 ```
