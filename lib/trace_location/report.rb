@@ -9,6 +9,7 @@ module TraceLocation
     GENERATORS = {
       csv: ::TraceLocation::Generator::Csv,
       log: ::TraceLocation::Generator::Log,
+      md: ::TraceLocation::Generator::Markdown,
       markdown: ::TraceLocation::Generator::Markdown
     }.freeze
 

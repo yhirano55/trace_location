@@ -7,7 +7,7 @@ module TraceLocation
     def initialize
       @current_dir = Dir.pwd
       @dest_dir = Dir.pwd
-      @default_format = :markdown
+      @default_format = :md
     end
   end
 end
