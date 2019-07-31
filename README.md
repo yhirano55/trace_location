@@ -37,7 +37,7 @@ Then you can get logs like this: [.md](https://github.com/yhirano55/trace_locati
 
 | name | content | example |
 |:-----|:--------|:--------|
-| format | `:markdown`, `:log`, `:csv` (default: `:markdown`) | `:markdown` |
+| format | `:md`, `:log`, `:csv` (default: `:md`) | `:md` |
 | match | Regexp, Symbol, String or Array for allow list | `[:activerecord, :activesupport]` |
 | ignore | Regexp, Symbol, String or Array for deny list | `/bootsnap\|activesupport/` |
 
@@ -69,7 +69,7 @@ Results: [.md](https://github.com/yhirano55/trace_location/blob/master/examples/
 ```ruby
 class User < ApplicationRecord
   # temporary surrounding with TraceLocation#trace
-  TraceLocation.trace(format: :markdown, ignore: /activesupport/) do
+  TraceLocation.trace(format: :md, ignore: /activesupport/) do
     has_secure_password
   end
 ```
@@ -87,7 +87,7 @@ class BooksController < ApplicationController
     @books = Book.all
 
     # temporary surrounding with TraceLocation#trace
-    TraceLocation.trace(format: :markdown, ignore: /activesupport|rbenv|concurrent-ruby/) do
+    TraceLocation.trace(format: :md, ignore: /activesupport|rbenv|concurrent-ruby/) do
       render json: @books
     end
   end
