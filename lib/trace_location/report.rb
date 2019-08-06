@@ -10,7 +10,8 @@ module TraceLocation
       csv: ::TraceLocation::Generator::Csv,
       log: ::TraceLocation::Generator::Log,
       md: ::TraceLocation::Generator::Markdown,
-      markdown: ::TraceLocation::Generator::Markdown
+      markdown: ::TraceLocation::Generator::Markdown,
+      html: ::TraceLocation::Generator::Html
     }.freeze
 
     def self.build(events, return_value, options)

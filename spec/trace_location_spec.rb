@@ -299,6 +299,33 @@ RSpec.describe TraceLocation do
         end
       end
 
+      context 'with html' do
+        let(:log_file) { Dir.entries('spec/support/logs').select { |file_name| file_name.match?(/\.html/) }.last }
+        let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+        let(:method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(format: :html) { method.call }
+        end
+
+        it 'including html tag' do
+          expect(content).to include "<html>"
+        end
+
+        it 'including path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'including method name' do
+          method_name = method.name
+
+          expect(content).to include "#{method_name}"
+        end
+      end
+
       context 'with "log"' do
         let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.log/) }.last }
         let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }

@@ -6,5 +6,6 @@ module TraceLocation
     require_relative 'generator/csv'
     require_relative 'generator/log'
     require_relative 'generator/markdown'
+    require_relative 'generator/html'
   end
 end
