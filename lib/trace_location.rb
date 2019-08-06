@@ -21,7 +21,7 @@ module TraceLocation # :nodoc:
     Report.build(result.events, result.return_value, options).generate
     true
   rescue StandardError => e
-    $stdout.puts "Failure: #{e.message}"
+    $stderr.puts "Failure: #{e.message}"
     false
   end
 
