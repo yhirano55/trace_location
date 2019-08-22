@@ -24,6 +24,7 @@ module TraceLocation
           location_cache_key = "#{caller_path}:#{caller_lineno}"
 
           mes = extract_method_from(trace_point)
+          next if mes.source_location[0] == '<internal:prelude>'
 
           case trace_point.event
           when :call

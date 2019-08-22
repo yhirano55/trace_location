@@ -351,6 +351,12 @@ RSpec.describe TraceLocation do
       end
     end
 
+    it 'passing a block including the `pp` method' do
+      expect {
+        TraceLocation.trace { pp 'foo' }
+      }.to output(/foo/).to_stdout
+    end
+
     after do
       Dir.foreach('spec/support/logs') do |file_name|
         FileUtils.rm File.join('spec', 'support', 'logs', file_name), force: true
