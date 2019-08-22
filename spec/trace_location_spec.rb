@@ -316,7 +316,7 @@ RSpec.describe TraceLocation do
         end
 
         it 'including method calling' do
-          method_calling = method.to_s.gsub(/#<Method: |>/, '')
+          method_calling = "#{method.receiver}.#{method.name}"
 
           expect(content).to include "[#{method_calling}]"
         end
@@ -344,7 +344,7 @@ RSpec.describe TraceLocation do
         end
 
         it 'including method calling' do
-          method_calling = method.to_s.gsub(/#<Method: |>/, '')
+          method_calling = "#{method.receiver}.#{method.name}"
 
           expect(content).to include method_calling.to_s
         end
