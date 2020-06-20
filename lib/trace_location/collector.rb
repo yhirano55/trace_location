@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'binding_of_caller'
 require 'method_source'
 
 module TraceLocation
@@ -14,17 +13,22 @@ module TraceLocation
         hierarchy = 0
         id = 0
         cache = {}
+        method_source_cache = {}
 
         tracer = TracePoint.new(:call, :return) do |trace_point|
           next if match && !trace_point.path.to_s.match?(/#{Array(match).join('|')}/)
           next if ignore && trace_point.path.to_s.match?(/#{Array(ignore).join('|')}/)
 
           id += 1
-          caller_path, caller_lineno = trace_point.binding.of_caller(2).source_location
+          caller_loc = caller_locations(2, 1)[0]
+          caller_path = caller_loc.absolute_path
+          caller_lineno = caller_loc.lineno
           location_cache_key = "#{caller_path}:#{caller_lineno}"
 
           mes = extract_method_from(trace_point)
           next if mes.source_location[0] == '<internal:prelude>'
+
+          method_source = method_source_cache[mes] ||= remove_indent(mes.source)
 
           case trace_point.event
           when :call
@@ -39,7 +43,7 @@ module TraceLocation
               caller_lineno: caller_lineno,
               owner: mes.owner,
               name: mes.name,
-              source: remove_indent(mes.source),
+              source: method_source,
               hierarchy: hierarchy,
               is_module: trace_point.self.is_a?(Module)
             )
@@ -57,7 +61,7 @@ module TraceLocation
               caller_lineno: caller_lineno,
               owner: mes.owner,
               name: mes.name,
-              source: remove_indent(mes.source),
+              source: method_source,
               hierarchy: hierarchy,
               is_module: trace_point.self.is_a?(Module)
             )
@@ -82,8 +86,8 @@ module TraceLocation
       end
 
       def remove_indent(source)
-        indent = source.split("\n").first.match(/\A(\s*).+\z/)[1]
-        source.split("\n").map { |line| line.gsub(/\A#{indent}/, '') }.join("\n")
+        indent = source[/\A(\s*)/, 1]
+        source.gsub(/^#{indent}/, '')
       end
     end
   end
