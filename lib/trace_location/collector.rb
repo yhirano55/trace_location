@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'binding_of_caller'
 require 'method_source'
 
 module TraceLocation
@@ -20,7 +19,9 @@ module TraceLocation
           next if ignore && trace_point.path.to_s.match?(/#{Array(ignore).join('|')}/)
 
           id += 1
-          caller_path, caller_lineno = trace_point.binding.of_caller(2).source_location
+          caller_loc = caller_locations(2, 1)[0]
+          caller_path = caller_loc.absolute_path
+          caller_lineno = caller_loc.lineno
           location_cache_key = "#{caller_path}:#{caller_lineno}"
 
           mes = extract_method_from(trace_point)
