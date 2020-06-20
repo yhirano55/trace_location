@@ -82,7 +82,7 @@ module TraceLocation
       end
 
       def remove_indent(source)
-        indent = source.split("\n").first.match(/\A(\s+).+\z/)[1]
+        indent = source.split("\n").first.match(/\A(\s*).+\z/)[1]
         source.split("\n").map { |line| line.gsub(/\A#{indent}/, '') }.join("\n")
       end
     end
