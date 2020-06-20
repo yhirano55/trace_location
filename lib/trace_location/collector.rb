@@ -13,6 +13,7 @@ module TraceLocation
         hierarchy = 0
         id = 0
         cache = {}
+        method_source_cache = {}
 
         tracer = TracePoint.new(:call, :return) do |trace_point|
           next if match && !trace_point.path.to_s.match?(/#{Array(match).join('|')}/)
@@ -27,6 +28,8 @@ module TraceLocation
           mes = extract_method_from(trace_point)
           next if mes.source_location[0] == '<internal:prelude>'
 
+          method_source = method_source_cache[mes] ||= remove_indent(mes.source)
+
           case trace_point.event
           when :call
             cache[location_cache_key] = hierarchy
@@ -40,7 +43,7 @@ module TraceLocation
               caller_lineno: caller_lineno,
               owner: mes.owner,
               name: mes.name,
-              source: remove_indent(mes.source),
+              source: method_source,
               hierarchy: hierarchy,
               is_module: trace_point.self.is_a?(Module)
             )
@@ -58,7 +61,7 @@ module TraceLocation
               caller_lineno: caller_lineno,
               owner: mes.owner,
               name: mes.name,
-              source: remove_indent(mes.source),
+              source: method_source,
               hierarchy: hierarchy,
               is_module: trace_point.self.is_a?(Module)
             )
