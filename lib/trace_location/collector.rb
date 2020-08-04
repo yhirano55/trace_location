@@ -26,7 +26,7 @@ module TraceLocation
           location_cache_key = "#{caller_path}:#{caller_lineno}"
 
           mes = extract_method_from(trace_point)
-          next if mes.source_location[0] == '<internal:prelude>'
+          next if mes.source_location[0].match?(/\A(?:<internal:.+>|\(eval\))\z/)
 
           method_source = method_source_cache[mes] ||= remove_indent(mes.source)
 
