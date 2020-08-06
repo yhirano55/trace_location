@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'trace_location'
+require 'trace_location/cli'
+
+TraceLocation::CLI.new(ARGV).run
