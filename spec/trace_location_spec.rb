@@ -357,6 +357,18 @@ RSpec.describe TraceLocation do
       }.to output(/foo/).to_stdout
     end
 
+    it 'passing a block incluing GC module method' do
+      expect {
+        TraceLocation.trace { GC.stat; puts 'success' }
+      }.to output(/success/).to_stdout
+    end
+
+    it 'passing a block incluing eval' do
+      expect {
+        TraceLocation.trace { eval 'def foo() pp "foo" end'; foo }
+      }.to output(/foo/).to_stdout
+    end
+
     after do
       Dir.foreach('spec/support/logs') do |file_name|
         FileUtils.rm File.join('spec', 'support', 'logs', file_name), force: true
