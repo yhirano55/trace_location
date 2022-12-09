@@ -163,6 +163,34 @@ RSpec.describe TraceLocation do
       end
     end
 
+    context 'with "methods"' do
+      let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
+      let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
+
+      context 'when argument is kind of Array' do
+        let(:method) { DependenceOnOtherClass.method(:dependent_method) }
+        let(:depended_method) { Independence.method(:independent_method) }
+
+        before do
+          TraceLocation.trace(methods: [:dependent_method]) { method.call }
+        end
+
+        it 'including path of target method' do
+          path, lineno = method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).to include "#{path}:#{lineno}"
+        end
+
+        it 'does not include non-specified methods' do
+          path, lineno = depended_method.source_location
+          path = path.delete_prefix "#{Dir.pwd}/"
+
+          expect(content).not_to include "#{path}:#{lineno}"
+        end
+      end
+    end
+
     context 'with "ignore"' do
       let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
       let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }

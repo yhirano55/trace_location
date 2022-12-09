@@ -8,7 +8,8 @@ module TraceLocation
     Result = Struct.new(:events, :return_value)
 
     class << self
-      def collect(match:, ignore:, &block)
+      def collect(match:, ignore:, methods:, &block)
+        methods = Array(methods) if methods
         events = []
         hierarchy = 0
         id = 0
@@ -18,6 +19,7 @@ module TraceLocation
         tracer = TracePoint.new(:call, :return) do |trace_point|
           next if match && !trace_point.path.to_s.match?(/#{Array(match).join('|')}/)
           next if ignore && trace_point.path.to_s.match?(/#{Array(ignore).join('|')}/)
+          next if methods && !methods.include?(trace_point.method_id)
 
           id += 1
           caller_loc = caller_locations(2, 1)[0]
