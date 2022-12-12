@@ -42,6 +42,7 @@ Then you can get logs like this: [.md](https://github.com/yhirano55/trace_locati
 | format | `:md`, `:log`, `:csv` (default: `:md`) | `:md` |
 | match | Regexp, Symbol, String or Array for allow list | `[:activerecord, :activesupport]` |
 | ignore | Regexp, Symbol, String or Array for deny list | `/bootsnap\|activesupport/` |
+| methods | Symbol or Array of method names | `[:call]` |
 
 ## More examples
 
