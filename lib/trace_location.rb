@@ -5,13 +5,6 @@ require_relative 'trace_location/config'
 require_relative 'trace_location/report'
 require_relative 'trace_location/version'
 
-begin
-  require 'rails'
-  require_relative 'trace_location/railtie'
-rescue LoadError
-  nil
-end
-
 module TraceLocation # :nodoc:
   def self.trace(options = {}, &block)
     match = options.delete(:match)
@@ -34,4 +27,11 @@ module TraceLocation # :nodoc:
   def self.config
     @config ||= Config.new
   end
+end
+
+begin
+  require 'rails'
+  require_relative 'trace_location/railtie'
+rescue LoadError
+  nil
 end
