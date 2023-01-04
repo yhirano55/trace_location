@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trace_location (0.12.0)
+    trace_location (0.12.1)
       method_source
 
 GEM
