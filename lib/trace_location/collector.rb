@@ -30,7 +30,16 @@ module TraceLocation
           mes = extract_method_from(trace_point)
           next if mes.source_location[0].match?(/\A(?:<internal:.+>|\(eval\))\z/)
 
-          method_source = method_source_cache[mes] ||= remove_indent(mes.source)
+          method_source =
+            if method_source_cache.key?(mes)
+              method_source_cache[mes]
+            else
+              method_source_cache[mes] =
+                begin
+                  remove_indent(mes.source)
+                rescue MethodSource::SourceNotFoundError
+                end
+            end
 
           case trace_point.event
           when :call
