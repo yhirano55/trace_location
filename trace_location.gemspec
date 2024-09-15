@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.required_ruby_version = '>= 2.6.0'
 
+  s.add_dependency 'csv'
   s.add_dependency 'method_source'
 
   s.add_development_dependency 'bundler'
