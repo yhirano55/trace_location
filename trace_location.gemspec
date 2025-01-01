@@ -7,8 +7,8 @@ require 'trace_location/version'
 Gem::Specification.new do |s|
   s.name          = 'trace_location'
   s.version       = TraceLocation::VERSION
-  s.authors       = ['Yoshiyuki Hirano', 'Misaki Shioi']
-  s.email         = ['yhirano@me.com', 'shioi.mm@gmail.com']
+  s.authors       = ['Yoshiyuki Hirano']
+  s.email         = ['yhirano@me.com']
   s.homepage      = 'https://github.com/yhirano55/trace_location'
   s.summary       = 'helps you get tracing the source location of codes'
   s.description   = %(TraceLocation helps you get tracing the source location of codes, and helps you can get reading the huge open souce libraries in Ruby)
