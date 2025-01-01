@@ -7,3 +7,7 @@
 * Add csv dependency to gemspec (#35 by @tnagatomi)
 * Support Ruby 3.4
 * Drop Ruby <= 3.0 support
+* Update development dependencies.
+* Add rubocop-rake, rubocop-rspec to development dependencies.
+* Generate `.rubocop_todo.yml`
+* Add rubocop jobs to GitHub Actions

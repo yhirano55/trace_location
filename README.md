@@ -1,7 +1,5 @@
 # TraceLocation
 
-[![Build Status](https://travis-ci.org/yhirano55/trace_location.svg?branch=master)](https://travis-ci.org/yhirano55/trace_location)
-
 TraceLocation helps you trace the source location to ease reading huge open-source libraries in Ruby.
 
 ## Installation
