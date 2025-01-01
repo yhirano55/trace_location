@@ -1,2 +1,6 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
 Metrics:
   Enabled: false
