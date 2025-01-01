@@ -1,5 +1,2 @@
-AllCops:
-  TargetRubyVersion: 2.6
-
 Metrics:
   Enabled: false
