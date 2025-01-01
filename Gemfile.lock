@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trace_location (0.12.2)
+    trace_location (1.0)
       csv
       method_source
 
