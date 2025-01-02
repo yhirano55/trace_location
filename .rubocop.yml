@@ -7,6 +7,9 @@ require:
 Metrics:
   Enabled: false
 
+RSpec/NestedGroups:
+  Max: 4
+
 Style/Documentation:
   Exclude:
     - 'spec/**/*'
