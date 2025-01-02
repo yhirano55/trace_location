@@ -2,7 +2,7 @@
 
 module TraceLocation
   class Event # :nodoc:
-    CLASS_FORMAT = /\A#<(?:Class|refinement)\:([A-Za-z0-9\:]+).*>\z/
+    CLASS_FORMAT = /\A#<(?:Class|refinement):([A-Za-z0-9:]+).*>\z/
     attr_reader :id, :event, :path, :lineno, :caller_path, :caller_lineno, :owner, :name, :source, :hierarchy, :is_module
 
     def initialize(id:, event:, path:, lineno:, caller_path:, caller_lineno:, owner:, name:, source:, hierarchy:, is_module:)
