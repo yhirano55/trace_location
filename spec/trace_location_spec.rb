@@ -6,7 +6,7 @@ require_relative 'support/dummy/dependence_on_multiple_class'
 
 RSpec.describe TraceLocation do
   it 'has a version number' do
-    expect(TraceLocation::VERSION).not_to be nil
+    expect(TraceLocation::VERSION).not_to be_nil
   end
 
   describe '.trace' do
