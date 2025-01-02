@@ -53,8 +53,3 @@ Style/EvalWithLocation:
 Style/Semicolon:
   Exclude:
     - 'spec/trace_location_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/StderrPuts:
-  Exclude:
-    - 'lib/trace_location.rb'
