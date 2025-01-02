@@ -3,6 +3,9 @@
 require 'bundler/setup'
 require 'trace_location'
 require 'fileutils'
+require 'warning'
+
+Warning.process { :raise }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
