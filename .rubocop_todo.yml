@@ -17,12 +17,6 @@ Lint/SuppressedException:
   Exclude:
     - 'lib/trace_location/collector.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AutoCorrect.
-RSpec/HooksBeforeExamples:
-  Exclude:
-    - 'spec/trace_location_spec.rb'
-
 # Configuration parameters: Max, AllowedGroups.
 RSpec/NestedGroups:
   Exclude:

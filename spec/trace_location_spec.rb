@@ -14,6 +14,12 @@ RSpec.describe TraceLocation do
       described_class.config.dest_dir = 'spec/support/logs'
     end
 
+    after do
+      Dir.foreach('spec/support/logs') do |file_name|
+        FileUtils.rm File.join('spec', 'support', 'logs', file_name), force: true
+      end
+    end
+
     context 'when the method is called not depending on other class' do
       let(:log_file) { Dir.entries('spec/support/logs/').select { |file_name| file_name.match?(/\.md/) }.last }
       let(:content) { File.read File.join('spec', 'support', 'logs', log_file) }
@@ -395,12 +401,6 @@ RSpec.describe TraceLocation do
       expect {
         described_class.trace { eval 'def foo() pp "foo" end'; foo }
       }.to output(/foo/).to_stdout
-    end
-
-    after do
-      Dir.foreach('spec/support/logs') do |file_name|
-        FileUtils.rm File.join('spec', 'support', 'logs', file_name), force: true
-      end
     end
   end
 end
