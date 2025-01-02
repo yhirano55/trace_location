@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix rubocop offenses
+
 ## 1.0.0 (2025-01-01)
 
 * Use GitHub Actions for CI instead of Travis CI

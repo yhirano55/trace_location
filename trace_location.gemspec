@@ -11,7 +11,10 @@ Gem::Specification.new do |s|
   s.email         = ['yhirano@me.com']
   s.homepage      = 'https://github.com/yhirano55/trace_location'
   s.summary       = 'helps you get tracing the source location of codes'
-  s.description   = %(TraceLocation helps you get tracing the source location of codes, and helps you can get reading the huge open souce libraries in Ruby)
+  s.description   = <<~DESCRIPTION
+    TraceLocation helps you get tracing the source location of codes,
+    and helps you can get reading the huge open souce libraries in Ruby
+  DESCRIPTION
   s.license       = 'MIT'
   s.files         = Dir.chdir(File.expand_path('.', __dir__)) do
     `git ls-files -z`.split("\x0").reject do |f|

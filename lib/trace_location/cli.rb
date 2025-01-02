@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'optparse'
 
 module TraceLocation
@@ -20,7 +22,7 @@ module TraceLocation
       opt.order!(argv, into: params)
       params.transform_keys! { |k| k.to_s.gsub('-', '_').to_sym }
 
-      if code = params.delete(:e)
+      if (code = params.delete(:e))
         exec_code code, params
       else
         file = argv.shift
@@ -52,7 +54,7 @@ module TraceLocation
 
     def exec_code(code, params)
       TraceLocation.trace(params) do
-        eval code
+        eval code # rubocop:disable Security/Eval
       end
     end
   end

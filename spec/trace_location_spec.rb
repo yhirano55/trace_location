@@ -6,12 +6,18 @@ require_relative 'support/dummy/dependence_on_multiple_class'
 
 RSpec.describe TraceLocation do
   it 'has a version number' do
-    expect(TraceLocation::VERSION).not_to be nil
+    expect(TraceLocation::VERSION).not_to be_nil
   end
 
   describe '.trace' do
     before do
-      TraceLocation.config.dest_dir = 'spec/support/logs'
+      described_class.config.dest_dir = 'spec/support/logs'
+    end
+
+    after do
+      Dir.foreach('spec/support/logs') do |file_name|
+        FileUtils.rm File.join('spec', 'support', 'logs', file_name), force: true
+      end
     end
 
     context 'when the method is called not depending on other class' do
@@ -20,7 +26,7 @@ RSpec.describe TraceLocation do
       let(:method) { Independence.method(:independent_method) }
 
       before do
-        TraceLocation.trace { method.call }
+        described_class.trace { method.call }
       end
 
       it 'including correct path' do
@@ -44,7 +50,7 @@ RSpec.describe TraceLocation do
       let(:depended_method) { Independence.method(:independent_method) }
 
       before do
-        TraceLocation.trace { method.call }
+        described_class.trace { method.call }
       end
 
       it 'including path of target method' do
@@ -84,7 +90,7 @@ RSpec.describe TraceLocation do
         let(:depended_method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(match: [:dependence_on_other_class, 'dependence_on_multiple_class']) { method.call }
+          described_class.trace(match: [:dependence_on_other_class, 'dependence_on_multiple_class']) { method.call }
         end
 
         it 'including path of target method' do
@@ -132,7 +138,7 @@ RSpec.describe TraceLocation do
         let(:depended_method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(match: /dependence_on_other_class/) { method.call }
+          described_class.trace(match: /dependence_on_other_class/) { method.call }
         end
 
         it 'including path of target method' do
@@ -172,7 +178,7 @@ RSpec.describe TraceLocation do
         let(:depended_method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(methods: [:dependent_method]) { method.call }
+          described_class.trace(methods: [:dependent_method]) { method.call }
         end
 
         it 'including path of target method' do
@@ -201,7 +207,7 @@ RSpec.describe TraceLocation do
         let(:depended_method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(ignore: [:dependence_on_other_class, 'dependence_on_multiple_class']) { method.call }
+          described_class.trace(ignore: [:dependence_on_other_class, 'dependence_on_multiple_class']) { method.call }
         end
 
         it 'excluding path of called method' do
@@ -249,7 +255,7 @@ RSpec.describe TraceLocation do
         let(:depended_method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(ignore: /dependence_on_other_class/) { method.call }
+          described_class.trace(ignore: /dependence_on_other_class/) { method.call }
         end
 
         it 'excluding path of target method' do
@@ -287,7 +293,7 @@ RSpec.describe TraceLocation do
         let(:method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(format: :markdown) { method.call }
+          described_class.trace(format: :markdown) { method.call }
         end
 
         it 'including correct path' do
@@ -310,7 +316,7 @@ RSpec.describe TraceLocation do
         let(:method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(format: :md) { method.call }
+          described_class.trace(format: :md) { method.call }
         end
 
         it 'including correct path' do
@@ -333,7 +339,7 @@ RSpec.describe TraceLocation do
         let(:method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(format: :log) { method.call }
+          described_class.trace(format: :log) { method.call }
         end
 
         it 'including path of target method' do
@@ -357,7 +363,7 @@ RSpec.describe TraceLocation do
         let(:method) { Independence.method(:independent_method) }
 
         before do
-          TraceLocation.trace(format: :csv) { method.call }
+          described_class.trace(format: :csv) { method.call }
         end
 
         it 'including header' do
@@ -379,27 +385,33 @@ RSpec.describe TraceLocation do
       end
     end
 
-    it 'passing a block including the `pp` method' do
-      expect {
-        TraceLocation.trace { pp 'foo' }
-      }.to output(/foo/).to_stdout
-    end
+    describe 'passing a block' do
+      context 'with including the `puts` method' do
+        let(:block) { -> { pp 'foo' } }
 
-    it 'passing a block incluing GC module method' do
-      expect {
-        TraceLocation.trace { GC.stat; puts 'success' }
-      }.to output(/success/).to_stdout
-    end
+        it { expect { described_class.trace(&block) }.to output(/foo/).to_stdout }
+      end
 
-    it 'passing a block incluing eval' do
-      expect {
-        TraceLocation.trace { eval 'def foo() pp "foo" end'; foo }
-      }.to output(/foo/).to_stdout
-    end
+      context 'with including GC module method' do
+        let(:block) do
+          lambda do
+            GC.stat
+            puts 'success'
+          end
+        end
 
-    after do
-      Dir.foreach('spec/support/logs') do |file_name|
-        FileUtils.rm File.join('spec', 'support', 'logs', file_name), force: true
+        it { expect { described_class.trace(&block) }.to output(/success/).to_stdout }
+      end
+
+      context 'with including `eval` method' do
+        let(:block) do
+          lambda do
+            eval 'def foo() pp "foo" end', binding, __FILE__, __LINE__
+            foo
+          end
+        end
+
+        it { expect { described_class.trace(&block) }.to output(/foo/).to_stdout }
       end
     end
   end
