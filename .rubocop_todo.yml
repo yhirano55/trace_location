@@ -48,14 +48,6 @@ Style/EvalWithLocation:
   Exclude:
     - 'spec/trace_location_spec.rb'
 
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'exe/trace_location'
-    - 'lib/trace_location/cli.rb'
-
 # This cop supports safe autocorrection (--autocorrect).
 Style/RedundantFreeze:
   Exclude:
