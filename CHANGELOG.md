@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Fix rubocop offenses
+* Add warning gem to development dependencies
 
 ## 1.1.0 (2025-01-02)
 
