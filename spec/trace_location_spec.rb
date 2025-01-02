@@ -406,7 +406,7 @@ RSpec.describe TraceLocation do
       context 'with including `eval` method' do
         let(:block) do
           lambda do
-            eval 'def foo() pp "foo" end'
+            eval 'def foo() pp "foo" end', binding, __FILE__, __LINE__
             foo
           end
         end
