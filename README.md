@@ -1,5 +1,7 @@
 # TraceLocation
 
+[![Gem Version](https://badge.fury.io/rb/trace_location.svg)](https://badge.fury.io/rb/trace_location)
+
 TraceLocation helps you trace the source location to ease reading huge open-source libraries in Ruby.
 
 ## Installation
