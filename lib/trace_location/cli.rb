@@ -54,7 +54,7 @@ module TraceLocation
 
     def exec_code(code, params)
       TraceLocation.trace(params) do
-        eval code
+        eval code # rubocop:disable Security/Eval
       end
     end
   end

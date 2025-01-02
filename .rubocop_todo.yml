@@ -22,10 +22,6 @@ RSpec/NestedGroups:
   Exclude:
     - 'spec/trace_location_spec.rb'
 
-Security/Eval:
-  Exclude:
-    - 'lib/trace_location/cli.rb'
-
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
   Exclude:
