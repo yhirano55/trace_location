@@ -10,10 +10,3 @@
 RSpec/NestedGroups:
   Exclude:
     - 'spec/trace_location_spec.rb'
-
-# Configuration parameters: AllowedConstants.
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/trace_location/cli.rb'

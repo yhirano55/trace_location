@@ -6,3 +6,9 @@ require:
 
 Metrics:
   Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/trace_location/cli.rb'
