@@ -58,10 +58,3 @@ Style/Semicolon:
 Style/StderrPuts:
   Exclude:
     - 'lib/trace_location.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'lib/trace_location.rb'

@@ -15,7 +15,7 @@ module TraceLocation # :nodoc:
     Report.build(result.events, result.return_value, options).generate
     true
   rescue StandardError => e
-    $stderr.puts "Failure: TraceLocation got an unexpected error."
+    $stderr.puts 'Failure: TraceLocation got an unexpected error.'
     $stderr.puts e.full_message
     false
   end
