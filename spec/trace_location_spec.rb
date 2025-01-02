@@ -385,22 +385,34 @@ RSpec.describe TraceLocation do
       end
     end
 
-    it 'passing a block including the `pp` method' do
-      expect {
-        described_class.trace { pp 'foo' }
-      }.to output(/foo/).to_stdout
-    end
+    describe 'passing a block' do
+      context 'with including the `puts` method' do
+        let(:block) { -> { pp 'foo' } }
 
-    it 'passing a block incluing GC module method' do
-      expect {
-        described_class.trace { GC.stat; puts 'success' }
-      }.to output(/success/).to_stdout
-    end
+        it { expect { described_class.trace(&block) }.to output(/foo/).to_stdout }
+      end
 
-    it 'passing a block incluing eval' do
-      expect {
-        described_class.trace { eval 'def foo() pp "foo" end'; foo }
-      }.to output(/foo/).to_stdout
+      context 'with including GC module method' do
+        let(:block) do
+          lambda do
+            GC.stat
+            puts 'success'
+          end
+        end
+
+        it { expect { described_class.trace(&block) }.to output(/success/).to_stdout }
+      end
+
+      context 'with including `eval` method' do
+        let(:block) do
+          lambda do
+            eval 'def foo() pp "foo" end'
+            foo
+          end
+        end
+
+        it { expect { described_class.trace(&block) }.to output(/foo/).to_stdout }
+      end
     end
   end
 end
