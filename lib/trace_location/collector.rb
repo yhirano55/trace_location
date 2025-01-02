@@ -38,6 +38,7 @@ module TraceLocation
                 begin
                   remove_indent(mes.source)
                 rescue MethodSource::SourceNotFoundError
+                  # do nothing
                 end
             end
 

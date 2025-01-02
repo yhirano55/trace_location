@@ -6,11 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Configuration parameters: AllowComments, AllowNil.
-Lint/SuppressedException:
-  Exclude:
-    - 'lib/trace_location/collector.rb'
-
 # Configuration parameters: Max, AllowedGroups.
 RSpec/NestedGroups:
   Exclude:
