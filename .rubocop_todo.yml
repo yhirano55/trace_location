@@ -65,11 +65,3 @@ Style/StderrPuts:
 Style/StringLiterals:
   Exclude:
     - 'lib/trace_location.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Max, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, SplitStrings.
-# URISchemes: http, https
-Layout/LineLength:
-  Exclude:
-    - 'lib/trace_location/event.rb'
-    - 'trace_location.gemspec'
