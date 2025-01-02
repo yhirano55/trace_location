@@ -49,11 +49,6 @@ Style/EvalWithLocation:
     - 'spec/trace_location_spec.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Style/RedundantFreeze:
-  Exclude:
-    - 'lib/trace_location/event.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/RedundantRegexpEscape:
   Exclude:
     - 'lib/trace_location/event.rb'
